@@ -2,8 +2,12 @@ import PDFDocument from 'pdfkit';
 import { Response } from 'express';
 import { IStory, IChapter } from '../types';
 
-interface StoryWithAuthor extends IStory { author: { username: string } }
-
+// Fixed Code
+interface StoryWithAuthor extends Omit<IStory, 'author'> {
+  author: {
+    username: string;
+  };
+}
 export const generateStoryPDF = (data: { story: StoryWithAuthor; chapters: IChapter[] }, res: Response): void => {
   const doc = new PDFDocument({ margin: 60, size: 'A4', bufferPages: true });
   res.setHeader('Content-Type', 'application/pdf');
