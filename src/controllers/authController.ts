@@ -23,9 +23,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) { res.status(404).json({ message: 'User not found' }); return; }
+    if (!user) { res.status(401).json({ message: 'Invalid email or password' }); return; }
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) { res.status(401).json({ message: 'Invalid password' }); return; }
+    if (!isMatch) { res.status(401).json({ message: 'Invalid email or password' }); return; }
     const token = generateToken(user._id.toString(), user.role);
     res.json({ token, user: { _id: user._id, username: user.username, email: user.email, role: user.role } });
   } catch (error) { res.status(500).json({ message: 'Server error', error }); }
